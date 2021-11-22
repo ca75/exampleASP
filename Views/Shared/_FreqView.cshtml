@@ -1,0 +1,45 @@
+﻿@model FreqViewModels
+@{
+    var init = 0;
+}
+@if (Model.Errors != null)
+{
+    <div>
+        @Model.Errors
+    </div>
+}
+else
+{
+    <div>
+        <table>
+            <tr>
+                <th>Frequency</th>
+                <th>Quantity</th>
+            </tr>
+            @foreach (var item in Model.ValuePairs.OrderBy(x => x.Key))
+            {
+                var numStart = item.Key - 1;
+                var numEnd = item.Key;
+                var quant = item.Value.Count;
+                if (init == 0)
+                {
+                    <tr>
+                        <td>@init to under @numEnd.ToString()0 </td>
+                        <td>@quant</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>@numStart.ToString()0 to under @numEnd.ToString()0 </td>
+                        <td>@quant</td>
+                    </tr>
+                }
+                init++;
+
+            }
+
+        </table>
+
+    </div>
+}

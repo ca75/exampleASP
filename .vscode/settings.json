@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "bin\\Release\\net5.0\\publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/c195ab69-f1b5-48fd-bb59-f2e6a8ae6fa9/resourceGroups/Web_App17Nov/providers/Microsoft.Web/sites/democq17nov-server"
+}

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<MaritimeCode.Models.RandomNumber>
+
+@{
+    ViewData["Title"] = "Random Numbers";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Number Value")
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @if (Model.Count() != 1)
+                {
+                    @Html.DisplayFor(modelItem => item.NumberValue)
+                }
+
+            </td>
+           
+        </tr>
+}
+    </tbody>
+</table>

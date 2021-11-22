@@ -1,0 +1,114 @@
+﻿@model UploadViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+</div>
+<div class="maindis">
+    <div>
+        <form id="uploadCSV" method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Upload">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <p>Upload a CSV file here:</p>
+                    <input asp-for="File" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Upload" id="inputSubmit" />
+                </div>
+            </div>
+        </form>
+        <section id="ResultsSet"></section>
+    </div>
+    <div class="reveals">
+        <button class="bt" id="checkDatabase">Check Uploaded</button>
+    </div>
+    <div id="ResultsBtns">
+        <button id="means">Show Mean</button>
+        <button id="stdDev">Show Deviation</button>
+        <button id="freqChart">Show Frequencies</button>
+    </div>
+</div>
+<br />
+<div id="showData">
+</div>
+
+@section Scripts{
+<script>
+    const btnCheck = $('#checkDatabase');
+    const inputFile = document.getElementById("File");
+    const inputSubmit = document.getElementById("inputSubmit");
+    inputFile.addEventListener('input', (e) => {
+        if (e == undefined){
+            return;
+        }else if (e.target.files.length == 0){
+            return;
+        }else if (e.target.files[0].type == 'text/csv' ||
+            e.target.files[0].name.endsWith(".csv"))
+            inputSubmit.focus();
+    });
+    $("form#uploadCSV").submit(function (e) {
+        e.preventDefault();
+        $('#ResultsSet').html("");
+
+        var formAction = $(this).attr("action");
+        var fdata = new FormData();
+
+        var fileInput = $('#File')[0];
+        var file = fileInput.files[0];
+        if (file == undefined) {
+            alert("Choose a file")
+            return;
+        }
+
+        fdata.append("File", file);
+        $.ajax({
+            type: 'post',
+            url: formAction,
+            data: fdata,
+            processData: false,
+            contentType: false
+        }).done(function (result) {
+            $('#ResultsSet').html(JSON.stringify(result));
+
+            if (JSON.stringify(result).includes("success")) {
+                $('#ResultsBtns').fadeIn();
+                btnCheck.removeClass('btn-danger')
+                    .addClass('btn-success');
+            } else {
+                btnCheck.addClass('btn-danger');
+                $('#File').focus();
+            }
+        })
+    });
+    $('#means').click(() => {
+        $.get({ url: "Home/Means" }).done((data) => {
+            $('#showData').html(data);
+        });
+    });
+    $('#stdDev').click(() => {
+        $.get({ url: "Home/StdDev" }).done((data) => {
+            $('#showData').html(data);
+        });
+    });
+    $('#freqChart').click(() => {
+        $.get({ url: "Home/FreqChart" }).done((data) => {
+            $('#showData').html(data);
+        });
+    });
+    $('#checkDatabase').click(() => {
+        $.get({ url: "Home/CheckUploaded" }).done((data) => {
+            $('#ResultsBtns').fadeIn();
+            btnCheck.removeClass('btn-danger')
+                .addClass('btn-success');
+        }).fail(() => {
+            alert("PLease upload a csv file to process");
+            btnCheck.addClass('btn-danger');
+        });
+    });
+</script>
+}
