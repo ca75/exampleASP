@@ -36,6 +36,15 @@ namespace MaritimeCode.Services
                 {
                     ranEntityList.Add(new RandomNumber { NumberValue = double.Parse(item) });
                 }
+<<<<<<< HEAD
+=======
+                catch (System.Exception ex)
+                {
+                    error = ex.Message;
+                    break;
+                }
+
+>>>>>>> 227d7ec94abd19fb31941c6c4ad07fdb5f3d8345
             }
             catch (System.Exception ex)
             {
