@@ -38,6 +38,7 @@ namespace MaritimeCode.Services
                 catch (System.Exception ex)
                 {
                     error = ex.Message;
+                    break;
                 }
 
             }
