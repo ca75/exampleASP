@@ -10,13 +10,13 @@ using MaritimeCode.ViewModels;
 namespace MaritimeCode.Services
 {
     public class CalculationServices : ICalculationServices
-    {        
+    {
         private readonly IRandomNumberRepository _rNR;
 
         public CalculationServices(IRandomNumberRepository rNR)
-        {           
+        {
             _rNR = rNR;
-        }       
+        }
 
         public async Task ProcessFile(UploadModel vm, bool saveData = true)
         {
@@ -29,26 +29,27 @@ namespace MaritimeCode.Services
                 await vm.File.CopyToAsync(stream);
             }
             string ReadCSV = System.IO.File.ReadAllText(filPath);
-            foreach (var item in ReadCSV.Split(','))
+
+            try
             {
-                try
+                foreach (var item in ReadCSV.Split(','))
                 {
                     ranEntityList.Add(new RandomNumber { NumberValue = double.Parse(item) });
                 }
-                catch (System.Exception ex)
-                {
-                    error = ex.Message;
-                }
-
             }
+            catch (System.Exception ex)
+            {
+                error = ex.Message;
+            }
+
             if (System.IO.File.Exists(filPath))
             {
                 System.IO.File.Delete(filPath);
             }
-                       
-            if(error != string.Empty)
-            {               
-                throw new Exception(error);                             
+
+            if (error != string.Empty)
+            {
+                throw new Exception(error);
             }
             else if (ranEntityList.Count == 1)
             {
@@ -70,8 +71,8 @@ namespace MaritimeCode.Services
         }
 
         public async Task<double> StandardDevAsync(bool isPopulation)
-        {            
-            var nums =await  _rNR.GetRanNumbersAsync();
+        {
+            var nums = await _rNR.GetRanNumbersAsync();
             double d = 0;
             double mean = await MeansCalAsync(nums);
             foreach (var item in nums)
@@ -82,7 +83,7 @@ namespace MaritimeCode.Services
             }
             if (isPopulation)
             {
-                var secondStep = d / nums.Count(); 
+                var secondStep = d / nums.Count();
                 return Math.Sqrt(secondStep);
             }
             else
@@ -90,12 +91,12 @@ namespace MaritimeCode.Services
                 var secondStep = d / (nums.Count() - 1); // as its a sample
                 return Math.Sqrt(secondStep);
             }
-            
+
         }
 
         public async Task<FreqViewModels> FequCalAsync()
         {
-            var nums =await _rNR.GetRanNumbersAsync();
+            var nums = await _rNR.GetRanNumbersAsync();
             var FVM = new FreqViewModels();
             var Results = FVM.ValuePairs;
 
